@@ -1,0 +1,13 @@
+// ==UserScript==
+// @name         Workflowy Quick Create
+// @namespace    https://github.com/mivok/workflowy-userscripts
+// @version      0.0.1
+// @description  Quickly create a new item in a specific location
+// @author       Mark Harrison
+// @match        https://workflowy.com/*
+// @match        https://beta.workflowy.com/*
+// @updateUrl    https://github.com/mivok/workflowy-userscripts/raw/master/quickCreate.user.js
+// @downloadUrl  https://github.com/mivok/workflowy-userscripts/raw/master/quickCreate.user.js
+// @grant        none
+// @run-at       document-end
+// ==/UserScript==
