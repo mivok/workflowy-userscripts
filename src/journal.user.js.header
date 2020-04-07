@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Workflowy Journal
 // @namespace    https://github.com/mivok/workflowy-userscripts
-// @version      0.0.1
+// @version      0.0.2
 // @description  Quickly create/select a daily journal item
 // @author       Mark Harrison
 // @match        https://workflowy.com/*
