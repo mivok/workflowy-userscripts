@@ -2,6 +2,7 @@
 SCRIPTS=(
     journal.user.js
     quickCreate.user.js
+    tabs.user.js
 )
 
 for SCRIPT in "${SCRIPTS[@]}"; do

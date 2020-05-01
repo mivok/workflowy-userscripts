@@ -154,6 +154,13 @@
         return offsetDate.toISOString().split('T')[0];
     }
 
+    // Set multiple styles at once
+    function setStyle(elem, styles) {
+        for (let style in styles) {
+            elem.style[style] = styles[style]
+        }
+    }
+
     // Main script
 
     function quickCreate() {

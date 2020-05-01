@@ -29,3 +29,11 @@ This script adds a 'journal' button, which will take you to a journal entry for 
 To choose the top level item for your journal, tag it with `#journalroot`. Only one item should be tagged like this, and all of your journal entries will be created underneath.
 
 There is also a keyboard shortcut you can use: CTRL+SHIFT+J.
+
+### Workflowy tabs
+
+[Install](https://github.com/mivok/workflowy-userscripts/raw/master/tabs.user.js)
+
+This script adds "tabs" to workflowy. They work similarly to browser tabs, but are inside of workflowy itself so you don't need to actually open a new browser tab.
+
+In the left sidebar, a new section, tabs is added, and you can click the plus button to add a new tab. Click on the tab names to switch between tabs, and the current tab will be updated to whatever item you are currently viewing. Press the X to the left of the tab to close the current tab.
