@@ -35,10 +35,12 @@ function setCurrentTab(t) {
     if (currentTab) {
         // Reset color of the tab before switching
         currentTab.firstChild.style.color = 'rgb(134, 140, 144)';
+        currentTab.firstChild.style.fontWeight = '400';
     }
 
     currentTab = t;
-    currentTab.firstChild.style.color = 'rgb(0,0,0)';
+    currentTab.firstChild.style.color = 'rgb(75, 81, 85)';
+    currentTab.firstChild.style.fontWeight = '600';
 }
 
 // Adds a new tab
@@ -166,10 +168,11 @@ function restoreTabs() {
         let tabs = [];
         for (const savedTab of savedTabs) {
             const tab = createTab();
-            updateTabDiv(tab, savedTab['url'], savedTab['title']);
+            updateTabDiv(tab, savedTab.url, savedTab.title);
             tabs.push(tab);
         }
         setCurrentTab(tabs[0]);
+        window.location = savedTabs[0].url
     } else {
         // There aren't any saved tabs, so just create a blank one
         setCurrentTab(createTab());
