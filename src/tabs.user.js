@@ -1,7 +1,3 @@
-// TODO
-// Styles
-// Special style for current tab
-
 var currentTab = null;
 
 function createHeaderDiv(title) {
@@ -115,20 +111,23 @@ function createTab() {
             }
             tabContainer.removeChild(outerDiv);
         }
+        saveTabs();
     });
 
     updateTabDiv(outerDiv);
     tabContainer.appendChild(outerDiv);
+    saveTabs();
 
     return outerDiv;
 }
 
-// Sets the link and title of a tab to the current workflowy item
-function updateTabDiv(div) {
+// Sets the link and title of a tab to the given values, or current workflowy
+// item if not specified (url and title are optional)
+function updateTabDiv(div, url, title) {
     if (div) {
         const link = div.querySelector('a');
-        link.href = window.location.hash
-        link.innerText = WF.currentItem().getNameInPlainText();
+        link.href = url || window.location.hash || "#";
+        link.innerText = title || WF.currentItem().getNameInPlainText();
     }
 }
 
@@ -147,6 +146,7 @@ function addTabEventHandler() {
             previousTitle = document.title;
             // The URL changed
             updateTabDiv(currentTab);
+            saveTabs();
         }
     }, 500);
 }
@@ -156,6 +156,37 @@ function createSpacer() {
     const spacerDiv = document.createElement('div');
     spacerDiv.style.marginBottom = '20px';
     return spacerDiv;
+}
+
+// Restore tabs from localStorage
+function restoreTabs() {
+    const savedTabsJSON = localStorage.getItem("tabs");
+    if (savedTabsJSON) {
+        const savedTabs = JSON.parse(savedTabsJSON);
+        let tabs = [];
+        for (const savedTab of savedTabs) {
+            const tab = createTab();
+            updateTabDiv(tab, savedTab['url'], savedTab['title']);
+            tabs.push(tab);
+        }
+        setCurrentTab(tabs[0]);
+    } else {
+        // There aren't any saved tabs, so just create a blank one
+        setCurrentTab(createTab());
+    }
+}
+
+// Save tabs to localStorage
+function saveTabs() {
+    let tabs = document.querySelectorAll("#tabcontainer>div a");
+    let savedTabs = []
+    for (const tab of tabs) {
+        savedTabs.push({
+            url: tab.href,
+            title: tab.innerText
+        });
+    }
+    localStorage.setItem("tabs", JSON.stringify(savedTabs));
 }
 
 // Set up the tab bar
@@ -170,7 +201,7 @@ function createTabBar(_) {
     sidebar.insertBefore(createSpacer(), sidebar.firstChild);
     sidebar.insertBefore(tabContainer, sidebar.firstChild);
     sidebar.insertBefore(createHeaderDiv("Tabs"), sidebar.firstChild);
-    setCurrentTab(createTab());
+    restoreTabs();
     addTabEventHandler();
 }
 
