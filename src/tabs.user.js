@@ -116,7 +116,9 @@ function createTab() {
         saveTabs();
     });
 
-    updateTabDiv(outerDiv);
+    // The new tab should start at Home
+    updateTabDiv(outerDiv, "#", "Home");
+    link.dispatchEvent(new MouseEvent('click'))
     tabContainer.appendChild(outerDiv);
     saveTabs();
 
