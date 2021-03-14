@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Workflowy Tabs
 // @namespace    https://github.com/mivok/workflowy-userscripts
-// @version      0.0.3
+// @version      0.0.4
 // @description  "Tabs" in workflowy
 // @author       Mark Harrison
 // @match        https://workflowy.com/*
