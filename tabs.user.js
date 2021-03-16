@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Workflowy Tabs
 // @namespace    https://github.com/mivok/workflowy-userscripts
-// @version      0.0.4
+// @version      0.0.5
 // @description  "Tabs" in workflowy
 // @author       Mark Harrison
 // @match        https://workflowy.com/*
@@ -211,7 +211,9 @@
         newButton.innerHTML = '&#65291;'
         newButton.style.marginLeft = '1em';
         newButton.addEventListener('click', () => {
-            setCurrentTab(createTab());
+            const newTab = createTab();
+            setCurrentTab(newTab);
+            window.location = newTab.getElementsByTagName('a')[0].href;
         });
         outerDiv.appendChild(newButton);
         return outerDiv;
@@ -339,7 +341,6 @@
 
         // The new tab should start at Home
         updateTabDiv(outerDiv, "#", "Home");
-        link.dispatchEvent(new MouseEvent('click'))
         tabContainer.appendChild(outerDiv);
         saveTabs();
 
