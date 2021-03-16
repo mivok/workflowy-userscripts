@@ -190,12 +190,13 @@ function addTabEventHandler() {
     // poll for changes. This lets us update the title when we make a new item
     // too.
     let previousState = window.history.state;
-    let previousTitle = document.title;
+    let previousTitle = WF.currentItem().getNameInPlainText();
     setInterval(() => {
+        const currentTitle = WF.currentItem().getNameInPlainText();
         if (previousState != window.history.state ||
-                previousTitle != document.title) {
+                previousTitle != currentTitle) {
             previousState = window.history.state;
-            previousTitle = document.title;
+            previousTitle = currentTitle;
             // The URL changed
             updateTabDiv(currentTab);
             saveTabs();
