@@ -163,9 +163,32 @@
         }
     }
 
+    // Add a style element (to add actual CSS from JS)
+    function addStylesheet(stylesheet) {
+        const element = document.createElement('style')
+        element.innerHTML = stylesheet;
+        document.head.insertBefore(element, null);
+    }
+
     // Main script
 
     var currentTab = null;
+    var draggedTab = null;
+
+    const stylesheet = `
+    #tabcontainer a:hover {
+        text-decoration: none;
+    }
+
+    #tabcontainer > div:hover {
+        background: rgb(236, 238, 240);
+    }
+
+    #tabcontainer > div * {
+        /* Prevent dragenter/dragleave events on child nodes */
+        pointer-events: none;
+    }
+    `
 
     function createHeaderDiv(title) {
         const outerDiv = document.createElement('div');
@@ -182,15 +205,12 @@
             'margin-bottom': '6px',
             'font-weight': 'bold',
             'color': 'rgb(75, 81, 85)',
-        })
+        });
         outerDiv.appendChild(document.createTextNode(title));
 
         newButton.innerHTML = '&#65291;'
         newButton.style.marginLeft = '1em';
         newButton.addEventListener('click', () => {
-            // Note: if I ever change behavior to have the new tab not duplicate
-            // the current one, then we'll also need to navigate to the root when
-            // we make a new tab.
             setCurrentTab(createTab());
         });
         outerDiv.appendChild(newButton);
@@ -283,6 +303,40 @@
             saveTabs();
         });
 
+        // Allow clicking anywhere in the tab to navigate
+        outerDiv.addEventListener('click', (e) => {
+            if (e.target == closeTabButton) {
+                return
+            }
+            const link = e.currentTarget.getElementsByTagName('a')[0];
+            link.dispatchEvent(new MouseEvent('click'));
+        });
+
+    
+        // Drag/drop
+        outerDiv.draggable = true
+        outerDiv.addEventListener('dragstart', (e) => {
+            e.dataTransfer.dropEffect = 'move';
+            e.dataTransfer.setDragImage(e.currentTarget, 0, 0);
+            draggedTab = e.currentTarget;
+        });
+        outerDiv.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+        // Drag hover state
+        outerDiv.addEventListener('dragenter', (e) => {
+            e.preventDefault();
+            e.currentTarget.style.borderTop = "2px solid #333";
+        });
+        outerDiv.addEventListener('dragleave', (e) => {
+            e.currentTarget.style.borderTop = "";
+        });
+        outerDiv.addEventListener('drop', (e) => {
+            e.currentTarget.style.borderTop = "";
+            tabContainer.insertBefore(draggedTab, e.currentTarget);
+            saveTabs();
+        });
+
         // The new tab should start at Home
         updateTabDiv(outerDiv, "#", "Home");
         link.dispatchEvent(new MouseEvent('click'))
@@ -369,6 +423,7 @@
             'margin': '0',
             'padding': '0',
         });
+        addStylesheet(stylesheet);
         tabContainer.id = 'tabcontainer';
         sidebar.insertBefore(createSpacer(), sidebar.firstChild);
         sidebar.insertBefore(tabContainer, sidebar.firstChild);

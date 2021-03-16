@@ -161,6 +161,13 @@
         }
     }
 
+    // Add a style element (to add actual CSS from JS)
+    function addStylesheet(stylesheet) {
+        const element = document.createElement('style')
+        element.innerHTML = stylesheet;
+        document.head.insertBefore(element, null);
+    }
+
     // Main script
 
     // The tag to look for as the root of the journal
