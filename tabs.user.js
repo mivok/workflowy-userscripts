@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Workflowy Tabs
 // @namespace    https://github.com/mivok/workflowy-userscripts
-// @version      0.0.6
+// @version      0.0.7
 // @description  "Tabs" in workflowy
 // @author       Mark Harrison
 // @match        https://workflowy.com/*
@@ -176,36 +176,90 @@
     var draggedTab = null;
 
     const stylesheet = `
-    #tabcontainer a:hover {
-        text-decoration: none;
-    }
-
-    #tabcontainer > div:hover {
-        background: rgb(236, 238, 240);
+    #tabheader {
+        /* From ._182tlv7 */
+        position: relative;
+        text-transform: uppercase;
+        font-size: 13px;
+        padding-left: 23px;
+        display: flex;
+        align-items: center;
+        -webkit-box-align: center;
+        margin-bottom: 6px;
+        font-weight: bold;
+        color: rgb(75, 81, 85);
     }
 
     #tabcontainer > div * {
         /* Prevent dragenter/dragleave events on child nodes */
         pointer-events: none;
     }
+
+    #tabcontainer .tc-closetab {
+        /* We need click events on the close tab box, otherwise it doesn't work.
+         * This breaks dragging hints when over the close button, but it's not
+         * that big of an issue */
+        pointer-events: auto;
+    }
+
+    #tabcontainer .tc-outer {
+        display: flex;
+        justify-content: center;
+        -webkit-box-pack: center;
+        flex-direction: column;
+        padding: 0px 24px 0px 12px;
+    }
+
+    #tabcontainer .tc-outer:hover {
+        background: rgb(236, 238, 240);
+    }
+
+    #tabcontainer .tc-inner {
+        position: relative;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        -webkit-box-align: center;
+        height: 32px;
+        color: rgb(134, 140, 144);
+        font-weight: 400;
+        padding-left: 4px;
+        overflow: hidden;
+    }
+
+    #tabcontainer .tc-closetab {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        -webkit-box-align: center;
+        justify-content: center;
+        -webkit-box-pack: center;
+        opacity: 0.45;
+        width: 20px;
+        height: 20px;
+        font-weight: 600;
+    }
+
+    #tabcontainer .tc-closetab:hover {
+        color: rgb(75, 81, 85);
+        opacity: 1.0;
+    }
+
+    #tabcontainer .tc-linkdiv, {
+        flex-grow: 1;
+        -webkit-box-flex: 1;
+        width: 0px;
+    }
+
+    #tabcontainer .tc-link:hover {
+        text-decoration: none;
+    }
     `
 
     function createHeaderDiv(title) {
         const outerDiv = document.createElement('div');
         const newButton = document.createElement('span');
-        setStyle(outerDiv, {
-            // From ._182tlv7
-            'position': 'relative',
-            'text-transform': 'uppercase',
-            'font-size': '13px',
-            'padding-left': '23px',
-            'display': 'flex',
-            'align-items': 'center',
-            '-webkit-box-align': 'center',
-            'margin-bottom': '6px',
-            'font-weight': 'bold',
-            'color': 'rgb(75, 81, 85)',
-        });
+        outerDiv.id = "tabheader";
         outerDiv.appendChild(document.createTextNode(title));
 
         newButton.innerHTML = '&#65291;'
@@ -241,45 +295,14 @@
         const closeTabButton = document.createElement('div');
         const link = document.createElement('a');
 
-        // Styles
-        setStyle(outerDiv, {
-            'display': 'flex',
-            'justify-content': 'center',
-            '-webkit-box-pack': 'center',
-            'flex-direction': 'column',
-            'padding': '0px 24px 0px 12px',
-        });
-        setStyle(innerDiv, {
-            'position': 'relative',
-            'white-space': 'nowrap',
-            'display': 'flex',
-            'align-items': 'center',
-            '-webkit-box-align': 'center',
-            'height': '32px',
-            'color': 'rgb(134, 140, 144)',
-            'font-weight': '400',
-            'padding-left': '4px',
-            'overflow': 'hidden',
-        });
-        // Arrow (plus/X)
-        setStyle(closeTabButton, {
-            'flex-shrink': '0',
-            'display': 'flex',
-            'align-items': 'center',
-            '-webkit-box-align': 'center',
-            'justify-content': 'center',
-            '-webkit-box-pack': 'center',
-            'opacity': '0.45',
-            'width': '20px',
-            'height': '20px',
-        });
-        // Text
-        setStyle(linkDiv, {
-            'flex-grow': '1',
-            '-webkit-box-flex': '1',
-            'width': '0px',
-        });
+        // Give everything classnames for styling
+        outerDiv.className = 'tc-outer';
+        innerDiv.className = 'tc-inner';
+        linkDiv.className = 'tc-linkdiv';
+        closeTabButton.className = 'tc-closetab';
+        link.className = 'tc-link';
 
+    
         closeTabButton.innerHTML = 'X';
 
         linkDiv.appendChild(link);
